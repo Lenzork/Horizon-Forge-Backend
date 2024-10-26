@@ -1,6 +1,6 @@
 # Horizon-Forge-Backend 🚀
 
-Welcome to the **Horizon-Forge-Backend**! This is the backend API for the Horizon Forge project, providing a robust, scalable, and flexible system for managing data and handling requests from various clients. The Horizon-Forge-Backend is designed with RESTful principles and aims to be easy to integrate and extend for developers building applications on top of it.
+Welcome to the **Horizon-Forge-Backend**! This is the backend API for the Horizon Forge project, providing a robust, scalable, and flexible system for managing data and handling requests from various clients. The Horizon-Forge-Backend is designed with RESTful principles and aims to be easy to integrate and extend for developers building applications on top of it. This Project is part of a big refactoring of the [Horizon Forge Web RPG](https://github.com/Lenzork/Horizon-Forge--Web-RPG)
 
 ## Table of Contents
 
