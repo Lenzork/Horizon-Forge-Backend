@@ -1,4 +1,4 @@
-class Item {
+class _Item {
     private _id: number;
     private _name: number;
     private _type: number;
