@@ -3,21 +3,28 @@ import globalRouter from "../routes/GlobalRouter.ts";
 import { CharactersRoute } from "../routes/CharactersRoute.ts";
 import { ItemsRoute } from "../routes/ItemsRoute.ts";
 import {APIRoute} from "../routes/APIRoute.ts";
+import client from "../database.ts";
 import "jsr:@std/dotenv/load";
 
 export class Server {
     private app: Application;
     private readonly _port: number;
-    private readonly database: string | undefined;
-    private readonly user: string | undefined;
+    private readonly databasePort: number;
+    private readonly databaseUser: string | undefined;
+    private readonly databaseHost: string | undefined;
+    private readonly databaseName: string | undefined;
+
+    private readonly timeoutBeforeExit = 5000;
 
     private _routes: APIRoute[] = []
 
     constructor() {
         this.app = new Application();
         this._port = Number(Deno.env.get("BACKEND_PORT")) || 8000;
-        this.database = Deno.env.get("DATABASE_NAME");
-        this.user = Deno.env.get("DATABASE_USER");
+        this.databaseHost = Deno.env.get("DATABASE_HOST");
+        this.databaseName = Deno.env.get("DATABASE_NAME");
+        this.databasePort = Number(Deno.env.get("DATABASE_PORT"));
+        this.databaseUser = Deno.env.get("DATABASE_USER");
     }
 
     public async start() {
@@ -25,6 +32,8 @@ export class Server {
 
         if(this.isInvalidConfiguration()) {
             await this.printErrorMessageAndExit();
+        } else if (!await this.checkDatabaseConnection()) {
+            await this.printDatabaseErrorMessageAndExit();
         } else {
             this.serverStartMessage();
 
@@ -34,7 +43,7 @@ export class Server {
             this.app.use(globalRouter.allowedMethods());
 
             try {
-                console.log(`%cStatus: Running\n\n`, "color: green; font-weight: bold");
+                console.log(`%cStatus: Running`, "color: green; font-weight: bold");
                 await this.app.listen({ port: this.port });
             } catch (exception) {
                 console.error(exception);
@@ -43,14 +52,33 @@ export class Server {
     }
 
     private isInvalidConfiguration() {
-        return this.database === undefined || this.user === undefined;
+        return this.databaseUser === undefined ||
+            this.databaseHost === undefined ||
+            this.databaseName === undefined ||
+            this.databasePort === undefined;
+    }
+
+    private async checkDatabaseConnection(): Promise<boolean> {
+        return await client.execute("SELECT 1")
+            .then(() => true)
+            .catch((exception) => {
+                console.error(exception.message);
+                return false;
+            });
     }
 
     private async printErrorMessageAndExit() {
         console.error("%cDatabase connection information is missing. Please check your .env file.\nRefer to the Readme for more information.",
             "color: red; font-weight: bold;");
 
-        await new Promise((resolve) => setTimeout(resolve, 3000)).then(() => Deno.exit());
+        await new Promise((resolve) => setTimeout(resolve, this.timeoutBeforeExit)).then(() => Deno.exit());
+    }
+
+    private async printDatabaseErrorMessageAndExit() {
+        console.error("%cWasn't able to connect to the database. Please check your .env file.",
+            "color: red; font-weight: bold;");
+
+        await new Promise((resolve) => setTimeout(resolve, this.timeoutBeforeExit)).then(() => Deno.exit());
     }
 
     private serverStartMessage() {
@@ -59,8 +87,8 @@ export class Server {
 
         console.log(`%cVersion: 0.1.0`, "color: lightgreen");
         console.log(`%cListening on Port: ${this.port}`, "color: lightgreen");
-        console.log(`%cDatabase Connection: ${this.database}`, "color: lightgreen");
-        console.log(`%cUser: ${this.user}`, "color: lightgreen");
+        console.log(`%cDatabase: ${this.databaseHost}/${this.databaseName}:${this.databasePort}`, "color: lightgreen");
+        console.log(`%cDatabase User: ${this.databaseUser}`, "color: lightgreen");
     }
 
     private printAsciiArt() {
