@@ -8,9 +8,9 @@ export abstract class APIRoute {
     protected constructor(route: string, routeController: APIController) {
         console.log(`Created route /${route}`);
 
-        if (routeController.isGetMethodAllowed()) globalRouter.get('/' + route, (context) => routeController.handleGet(context));
-        if (routeController.isPostMethodAllowed()) globalRouter.post('/' + route, (context) => routeController.handlePost(context));
-        if (routeController.isPutMethodAllowed()) globalRouter.put('/' + route, (context) => routeController.handlePut(context));
-        if (routeController.isDeleteMethodAllowed()) globalRouter.delete('/' + route, (context) => routeController.handleDelete(context));
+        if (routeController.isGetMethodAllowed()) globalRouter.get('/api/' + route, (context) => routeController.handleGet(context));
+        if (routeController.isPostMethodAllowed()) globalRouter.post('/api/' + route, (context) => routeController.handlePost(context));
+        if (routeController.isPutMethodAllowed()) globalRouter.put('/api/' + route, (context) => routeController.handlePut(context));
+        if (routeController.isDeleteMethodAllowed()) globalRouter.delete('/api/' + route, (context) => routeController.handleDelete(context));
     }
 }
