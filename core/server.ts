@@ -15,7 +15,7 @@ export class Server {
 
     constructor() {
         this.app = new Application();
-        this._port = Number(Deno.env.get("PORT")) || 8000;
+        this._port = Number(Deno.env.get("BACKEND_PORT")) || 8000;
         this.database = Deno.env.get("DATABASE_NAME");
         this.user = Deno.env.get("DATABASE_USER");
     }
