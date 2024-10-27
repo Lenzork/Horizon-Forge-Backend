@@ -49,8 +49,12 @@ These instructions will help you set up the project on your local machine for de
 The API requires a few environment variables for proper setup. Add these to your `.env` file:
 
 ```plaintext
-DATABASE_URL=<your_database_url>
-PORT=8000
+BACKEND_PORT=8000
+DATABASE_HOST="<YOUR_DATABASE_HOST>"
+DATABASE_USER="<YOUR_DATABASE_USER>"
+DATABASE_PASSWORD="<YOUR_DATABASE_PASSWORD>"
+DATABASE_NAME="<YOUR_DATABASE_NAME>"
+DATABASE_PORT=<YOUR_DATABASE_PORT>
 JWT_SECRET=<your_jwt_secret>
 ```
 
