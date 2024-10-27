@@ -5,6 +5,7 @@ const client = await new Client().connect({
     username: Deno.env.get("DATABASE_USER"),
     db: Deno.env.get("DATABASE_NAME"),
     password: Deno.env.get("DATABASE_PASSWORD"),
+    port: Number(Deno.env.get("DATABASE_PORT")),
 });
 
 export default client;
