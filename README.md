@@ -23,6 +23,7 @@ These instructions will help you set up the project on your local machine for de
 ### Prerequisites
 
 - [Deno](https://deno.com/) (v2.0.3 or higher)
+- [Mysql Server](https://dev.mysql.com/downloads/mysql/8.4.html) (v8.0 or higher)
 
 ### Installation 🛠️
 
