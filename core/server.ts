@@ -18,34 +18,39 @@ export class Server {
         this._port = Number(Deno.env.get("PORT")) || 8000;
         this.database = Deno.env.get("DATABASE_NAME");
         this.user = Deno.env.get("DATABASE_USER");
-
-        this.printAsciiArt();
-
-        if(this.isInvalidConfiguration()) {
-            console.error("%cDatabase connection information is missing. Please check your .env file.\nRefer to the Readme for more information.",
-                "color: red; font-weight: bold;");
-            Deno.exit(1);
-        }
-
-        this.serverStartMessage();
-
-        this.createRoutes();
-
-        this.app.use(globalRouter.routes());
-        this.app.use(globalRouter.allowedMethods());
     }
 
     public async start() {
-        try {
-            console.log(`%cStatus: Running\n\n`, "color: green; font-weight: bold");
-            await this.app.listen({ port: this.port });
-        } catch (exception) {
-            console.error(exception);
+        this.printAsciiArt();
+
+        if(this.isInvalidConfiguration()) {
+            await this.printErrorMessageAndExit();
+        } else {
+            this.serverStartMessage();
+
+            this.createRoutes();
+
+            this.app.use(globalRouter.routes());
+            this.app.use(globalRouter.allowedMethods());
+
+            try {
+                console.log(`%cStatus: Running\n\n`, "color: green; font-weight: bold");
+                await this.app.listen({ port: this.port });
+            } catch (exception) {
+                console.error(exception);
+            }
         }
     }
 
     private isInvalidConfiguration() {
         return this.database === undefined || this.user === undefined;
+    }
+
+    private async printErrorMessageAndExit() {
+        console.error("%cDatabase connection information is missing. Please check your .env file.\nRefer to the Readme for more information.",
+            "color: red; font-weight: bold;");
+
+        await new Promise((resolve) => setTimeout(resolve, 3000)).then(() => Deno.exit());
     }
 
     private serverStartMessage() {
