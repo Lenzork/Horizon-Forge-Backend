@@ -6,8 +6,6 @@ import { APIController } from "../controller/APIController.ts";
  */
 export abstract class APIRoute {
     protected constructor(route: string, routeController: APIController) {
-        console.log(`Created route /${route}`);
-
         if (routeController.isGetMethodAllowed()) globalRouter.get('/api/' + route, (context) => routeController.handleGet(context));
         if (routeController.isPostMethodAllowed()) globalRouter.post('/api/' + route, (context) => routeController.handlePost(context));
         if (routeController.isPutMethodAllowed()) globalRouter.put('/api/' + route, (context) => routeController.handlePut(context));
