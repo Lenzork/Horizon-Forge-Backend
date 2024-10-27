@@ -2,20 +2,21 @@ import { Application } from "https://deno.land/x/oak@v17.1.2/mod.ts";
 import globalRouter from "../routes/GlobalRouter.ts";
 import { CharactersRoute } from "../routes/CharactersRoute.ts";
 import { ItemsRoute } from "../routes/ItemsRoute.ts";
+import {APIRoute} from "../routes/APIRoute.ts";
 
 export class Server {
     private app: Application;
-    private readonly port: number;
+    private readonly _port: number;
+
+    private _routes: APIRoute = [
+        new CharactersRoute(),
+        new ItemsRoute()
+    ]
 
     constructor() {
         this.app = new Application();
-        this.port = Number(Deno.env.get("PORT")) || 8000;
+        this._port = Number(Deno.env.get("PORT")) || 8000;
 
-        // Create Routes
-        new CharactersRoute();
-        new ItemsRoute();
-
-        // Use global router
         this.app.use(globalRouter.routes());
         this.app.use(globalRouter.allowedMethods());
     }
@@ -27,5 +28,13 @@ export class Server {
         } catch (exception) {
             console.error(exception);
         }
+    }
+
+    get routes(): APIRoute {
+        return this._routes;
+    }
+
+    get port(): number {
+        return this._port;
     }
 }
