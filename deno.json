@@ -1,6 +1,7 @@
 {
   "tasks": {
-    "dev": "deno run --watch main.ts"
+    "dev": "deno run --watch main.ts",
+    "compile": "deno compile --allow-net --allow-env --allow-read main.ts --output Horizon-Forge-Backend --env-file .env"
   },
   "imports": {
     "@std/assert": "jsr:@std/assert@1"
